@@ -122,6 +122,11 @@ Config, control, analytics, database, web -- altogether on one node.
           address: 127.0.0.1
         master:
           host: 127.0.0.1
+        contrail_cache:
+          engine: redis
+          host: 127.0.0.1
+          port: 6379
+          password: guest
         discovery:
           host: 127.0.0.1
         data_ttl: 2
@@ -168,6 +173,7 @@ Config, control, analytics, database, web -- altogether on one node.
         cache:
           engine: redis
           host: 127.0.0.1
+          password: guest
           port: 6379
         members:
         - host: 127.0.0.1
@@ -280,6 +286,11 @@ nodes.
           address: 127.0.0.1
         master:
           host: 127.0.0.1
+        contrail_cache:
+          engine: redis
+          host: 127.0.0.1
+          port: 6379
+          password: guest
         discovery:
           host: 127.0.0.1
         data_ttl: 1
@@ -332,6 +343,7 @@ nodes.
         cache:
           engine: redis
           host: 127.0.0.1
+          password: guest
           port: 6379
         members:
         - host: 127.0.0.1
@@ -473,6 +485,7 @@ Config, control, database, web.
         cache:
           engine: redis
           host: 127.0.0.1
+          password: guest
           port: 6379
         members:
         - host: 127.0.0.1
@@ -515,6 +528,11 @@ Analytics and database on an analytic node(s)
         enabled: true
         bind:
           address: 127.0.0.1
+        contrail_cache:
+          engine: redis
+          host: 127.0.0.1
+          password: guest
+          port: 6379
         master:
           host: 127.0.0.1
         discovery:
