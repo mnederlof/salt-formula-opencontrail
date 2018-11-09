@@ -88,6 +88,14 @@ opencontrail:
       id: 2
     - host: 127.0.0.1
       id: 3
+    xmpp:
+      tls:
+        enabled: True
+        auth:
+          enabled: True
+        cert_file: /etc/contrail/server.pem
+        key_file: /etc/contrail/privkey.pem
+        ca_cert_file: /etc/contrail/ca-cert.pem
   database:
     version: 3.0
     cassandra:

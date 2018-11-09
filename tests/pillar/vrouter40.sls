@@ -52,3 +52,11 @@ opencontrail:
           user: admin
           password: "supersecretpassword123"
           tenant: admin
+    xmpp:
+      tls:
+        enabled: True
+        auth:
+          enabled: True
+        cert_file: /etc/contrail/server.pem
+        key_file: /etc/contrail/privkey.pem
+        ca_cert_file: /etc/contrail/ca-cert.pem
