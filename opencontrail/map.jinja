@@ -137,6 +137,16 @@ database:
     {%- set openjdkPackage = 'openjdk-8-jre-headless' if grains.get('oscodename') == 'xenial' else 'openjdk-7-jre-headless' %}
     {%- set databasePackage = 'contrail-openstack-database' if version >= 4.0 else 'contrail-database' %}
          ['cassandra', 'zookeeper', '{{ openjdkPackage }}' , '{{ databasePackage }}']
+    {%- if version >= 4.1 %}
+    cassandra_version: '3.10'
+    kafka_version: '1.1.1'
+    {%- elif version == 4.0 %}
+    cassandra_version: '2.2'
+    kafka_version: '0.9.0.1'
+    {%- else %}
+    cassandra_version: '2.1'
+    kafka_version: '0.8.2.0'
+    {%- endif%}
     cassandra_config: '/etc/cassandra/'
     compaction_throughput_mb_per_sec: 16
     services:
@@ -152,6 +162,16 @@ database:
   RedHat:
     pkgs:
          ['contrail-openstack-database', 'zookeeper', 'supervisor', 'java-1.7.0-openjdk-headless']
+    {%- if version >= 4.1 %}
+    cassandra_version: '3.10'
+    kafka_version: '1.1.1'
+    {%- elif version == 4.0 %}
+    cassandra_version: '2.2'
+    kafka_version: '0.9.0.1'
+    {%- else %}
+    cassandra_version: '2.1'
+    kafka_version: '0.8.2.0'
+    {%- endif%}
     cassandra_config: '/etc/cassandra/conf/'
     compaction_throughput_mb_per_sec: 16
     services:
@@ -303,6 +323,16 @@ database:
     pkgs:
     {%- set openjdkPackage = 'openjdk-8-jre-headless' if grains.get('oscodename') == 'xenial' else 'openjdk-7-jre-headless' %}
          ['cassandra', 'zookeeper', '{{ openjdkPackage }}', 'contrail-openstack-database']
+    {%- if version >= 4.1 %}
+    cassandra_version: '3.10'
+    kafka_version: '1.1.1'
+    {%- elif version == 4.0 %}
+    cassandra_version: '2.2'
+    kafka_version: '0.9.0.1'
+    {%- else %}
+    cassandra_version: '2.1'
+    kafka_version: '0.8.2.0'
+    {%- endif%}
     cassandra_config: '/etc/cassandra/'
     compaction_throughput_mb_per_sec: 16
     services:
@@ -314,6 +344,16 @@ database:
   RedHat:
     pkgs:
          ['contrail-openstack-database', 'zookeeper', 'supervisor', 'java-1.7.0-openjdk-headless']
+    {%- if version >= 4.1 %}
+    cassandra_version: '3.10'
+    kafka_version: '1.1.1'
+    {%- elif version == 4.0 %}
+    cassandra_version: '2.2'
+    kafka_version: '0.9.0.1'
+    {%- else %}
+    cassandra_version: '2.1'
+    kafka_version: '0.8.2.0'
+    {%- endif%}
     cassandra_config: '/etc/cassandra/conf/'
     compaction_throughput_mb_per_sec: 16
     services:

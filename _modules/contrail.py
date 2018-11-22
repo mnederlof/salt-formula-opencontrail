@@ -702,7 +702,7 @@ def global_vrouter_config_list(**kwargs):
     vnc_client = _auth(**kwargs)
     vrouter_conf_objs = vnc_client._objects_list('global-vrouter-config', detail=True)
     for vrouter_conf_obj in vrouter_conf_objs:
-        ret[vrouter_conf_obj._display_name] = vrouter_conf_obj.__dict__
+        ret[vrouter_conf_obj.name] = vrouter_conf_obj.__dict__
     return ret
 
 
