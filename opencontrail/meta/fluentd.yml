@@ -139,12 +139,16 @@ agent:
             {%- if version < 4.0 %}
             path: /var/log/cassandra/*.log
             {% else %}
-            path: /var/log/contrail/cassandra-status.log
+            path:
+            - /var/log/contrail/cassandra-status.log
+            - /var/log/configdb/cassandra/*.log
+            - /var/log/analyticsdb/cassandra/*.log
             {% endif %}
             tag: temp.cassandra
             pos_file: {{ positiondb }}/cassandra.pos
             path_key: log_location
             parser:
+              # Cassandra log custom format https://regex101.com/r/f8C4RV/1
               type: multiline
               format: '/(?<Timestamp>[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3})\s+-\s+(?<java_severity_label>[A-Z]*)\s+-\s+(?<Payload>.*)/'
               format_firstline: '/^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}/'
@@ -153,10 +157,17 @@ agent:
               time_format: '%Y-%m-%d %H:%M:%S,%N'
           tail_zookeeper_log_files:
             type: tail
+            {%- if version < 4.0 %}
             path: /var/log/zookeeper/zookeeper.log
+            {% else %}
+            path:
+            - /var/log/configdb/zookeeper/zookeeper.log
+            - /var/log/analyticsdb/zookeeper/zookeeper.log
+            {% endif %}
             tag: opencontrail.zookeeper
             pos_file: {{ positiondb }}/zookeeper.pos
             parser:
+              # Zookeeper log custom format https://regex101.com/r/NoXbiq/1/
               type: multiline
               format: '/(?<Timestamp>[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3})\s+-\s+(?<java_severity_label>[A-Z]*)\s+(?<Payload>.*)/'
               format_firstline: '/^[0-9]{4}-[0-9]{2}-[0-9]{2}\s[0-9]{2}:[0-9]{2}:[0-9]{2},[0-9]{3}/'
