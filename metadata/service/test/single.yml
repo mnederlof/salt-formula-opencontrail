@@ -3,6 +3,8 @@ applications:
 parameters:
   _param:
     opencontrail_identity_port: 35357
+    opencontrail_admin_password: 'none'
+    opencontrail_admin_user: 'contrail'
   opencontrail:
     test:
       enabled: True
@@ -33,9 +35,9 @@ parameters:
         service_token: ${_param:keystone_service_token}
         service_tenant: service
         admin_tenant: admin
-        admin_name: admin
-        admin_password: ${_param:keystone_admin_password}
-        password: ${_param:keystone_admin_password}
+        admin_name: ${_param:opencontrail_admin_user}
+        admin_password: ${_param:opencontrail_admin_password}
+        password: ${_param:opencontrail_admin_password}
         cacert: '/etc/ssl/certs/ca-certificates.crt'
         bind:
           address: 0.0.0.0

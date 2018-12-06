@@ -7,7 +7,8 @@ parameters:
     opencontrail_version: 2.2
     opencontrail_identity_port: 35357
     opencontrail_identity_version: '2.0'
-    keystone_admin_password: 'none'
+    opencontrail_admin_password: 'none'
+    opencontrail_admin_user: 'contrail'
     keystone_service_token: 'none'
     openstack_region: RegionOne
     redis_password: 'none'
@@ -19,7 +20,7 @@ parameters:
         host: ${_param:cluster_vip_address}
         port: ${_param:opencontrail_identity_port}
         token: '${_param:keystone_service_token}'
-        password: '${_param:keystone_admin_password}'
+        password: '${_param:opencontrail_admin_password}'
       network:
         engine: neutron
         host: ${_param:cluster_vip_address}
@@ -58,8 +59,8 @@ parameters:
         region: ${_param:openstack_region}
         host: ${_param:cluster_vip_address}
         port: ${_param:opencontrail_identity_port}
-        user: admin
-        password: '${_param:keystone_admin_password}'
+        user: ${_param:opencontrail_admin_user}
+        password: '${_param:opencontrail_admin_password}'
         token: '${_param:keystone_service_token}'
         tenant: admin
       members:
@@ -151,8 +152,8 @@ parameters:
         region: RegionOne
         host: ${_param:cluster_vip_address}
         port: ${_param:opencontrail_identity_port}
-        user: admin
-        password: '${_param:keystone_admin_password}'
+        user: ${_param:opencontrail_admin_user}
+        password: '${_param:opencontrail_admin_password}'
         token: '${_param:keystone_service_token}'
         tenant: admin
       network:

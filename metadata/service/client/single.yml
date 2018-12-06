@@ -5,6 +5,8 @@ parameters:
     opencontrail_version: 3.0
     opencontrail_identity_port: 35357
     opencontrail_identity_version: '2.0'
+    opencontrail_admin_password: 'none'
+    opencontrail_admin_user: 'contrail'
   opencontrail:
     client:
       enabled: True
@@ -15,8 +17,8 @@ parameters:
         port: ${_param:opencontrail_identity_port}
         version: ${_param:opencontrail_identity_version}
         tenant: admin
-        user: admin
-        password: ${_param:keystone_admin_password}
+        user: ${_param:opencontrail_admin_user}
+        password: ${_param:opencontrail_admin_password}
       api:
         engine: contrail
         host: ${_param:cluster_local_address}

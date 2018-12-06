@@ -97,29 +97,3 @@ vm.overcommit_memory:
 
 /etc/contrail:
   file.directory
-
-{%- if common.identity.engine == "keystone" %}
-/etc/contrail/ctrl-details:
-  file.managed:
-  - source: salt://opencontrail/files/{{ common.version }}/ctrl-details
-  - template: jinja
-  - require:
-    - file: /etc/contrail
-
-{%- if common.version < 3.0 %}
-/etc/contrail/openstackrc:
-  file.managed:
-  - source: salt://opencontrail/files/{{ common.version }}/openstackrc
-  - template: jinja
-  - require:
-    - file: /etc/contrail
-
-/etc/contrail/keystonerc:
-  file.managed:
-  - source: salt://opencontrail/files/{{ common.version }}/keystonerc
-  - template: jinja
-  - require:
-    - file: /etc/contrail
-{%- endif %}
-
-{%- endif %}
