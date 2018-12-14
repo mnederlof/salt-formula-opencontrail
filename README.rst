@@ -735,6 +735,43 @@ Without Keystone
           token: none
         ...
 
+XMPP Encryption
+---------------
+
+Configure encryption of XMPP
+
+Computes nodes
+~~~~~~~~~~~~~~
+
+.. code-block:: yaml
+
+  opencontrail:
+    compute:
+      xmpp:
+        tls:
+          enabled: False
+          auth:
+            enabled: False
+          (optional) cert_file: /etc/contrail/server.pem
+          (optional) key_file: /etc/contrail/privkey.pem
+          (optional) ca_cert_file: /etc/contrail/ca-cert.pem
+
+Control nodes
+~~~~~~~~~~~~~
+
+.. code-block:: yaml
+
+  opencontrail:
+    control:
+      xmpp:
+        tls:
+          enabled: False
+          auth:
+            enabled: False
+          (optional) cert_file: /etc/contrail/server.pem
+          (optional) key_file: /etc/contrail/privkey.pem
+          (optional) ca_cert_file: /etc/contrail/ca-cert.pem
+
 Kubernetes support
 ------------------
 
@@ -1265,7 +1302,7 @@ Param vn_name is the name of the external network.
             - [tenant3, 7]
 
 
-If you want to remove all shares from the ip floating pool, define only empty list in 
+If you want to remove all shares from the ip floating pool, define only empty list in
 list of projects, like this:
 
 .. code-block:: yaml

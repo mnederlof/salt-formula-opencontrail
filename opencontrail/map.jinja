@@ -60,6 +60,14 @@ compute:
     {%- else %}
         ['contrail-vrouter-agent', 'contrail-vrouter-nodemgr']
     {%- endif %}
+    xmpp:
+      tls:
+        enabled: False
+        auth:
+          enabled: False
+        cert_file: /etc/contrail/ssl/certs/server.pem
+        key_file: /etc/contrail/ssl/private/server-privkey.pem
+        ca_cert_file: /etc/contrail/ssl/certs/ca-cert.pem
     dpdk:
         enabled: False
   RedHat:
@@ -71,6 +79,14 @@ compute:
     {%- else %}
         ['contrail-vrouter-agent', 'contrail-vrouter-nodemgr']
     {%- endif %}
+    xmpp:
+      tls:
+        enabled: False
+        auth:
+          enabled: False
+        cert_file: /etc/contrail/ssl/certs/server.pem
+        key_file: /etc/contrail/ssl/private/server-privkey.pem
+        ca_cert_file: /etc/contrail/ssl/certs/ca-cert.pem
     dpdk:
         enabled: False
 config:
@@ -118,6 +134,14 @@ control:
     container_name:
         {{ pillar.docker.client.compose.opencontrail.service.controller.container_name }}
     {%- endif%}
+    xmpp:
+      tls:
+        enabled: False
+        auth:
+          enabled: False
+        cert_file: /etc/contrail/ssl/certs/server.pem
+        key_file: /etc/contrail/ssl/private/server-privkey.pem
+        ca_cert_file: /etc/contrail/ssl/certs/ca-cert.pem
   RedHat:
     pkgs:
          ['contrail-openstack-control']
@@ -131,6 +155,14 @@ control:
     container_name:
         {{ pillar.docker.client.compose.opencontrail.service.controller.container_name }}
     {%- endif%}
+    xmpp:
+      tls:
+        enabled: False
+        auth:
+          enabled: False
+        cert_file: /etc/contrail/ssl/certs/server.pem
+        key_file: /etc/contrail/ssl/private/server-privkey.pem
+        ca_cert_file: /etc/contrail/ssl/certs/ca-cert.pem
 database:
   Debian:
     pkgs:
