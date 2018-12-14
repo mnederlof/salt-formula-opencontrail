@@ -4,7 +4,7 @@
 include:
 - opencontrail.common
 
-{% if database.cassandra.version == 1 %}
+{% if database.cassandra_version == 1 %}
 
 {{ database.cassandra_config }}cassandra.yaml:
   file.managed:
@@ -29,7 +29,7 @@ include:
 
 {{ database.cassandra_config }}cassandra.yaml:
   file.managed:
-  - source: salt://opencontrail/files/{{ database.version }}/cassandra.yaml
+  - source: salt://opencontrail/files/cassandra/{{ database.cassandra_version }}/cassandra.yaml
   - template: jinja
   - makedirs: True
 {% if grains.os_family == "RedHat" %}
@@ -41,7 +41,7 @@ include:
 
 {{ database.cassandra_config }}cassandra_analytics.yaml:
   file.managed:
-  - source: salt://opencontrail/files/{{ database.version }}/cassandra_analytics.yaml
+  - source: salt://opencontrail/files/cassandra/{{ database.cassandra_version }}/cassandra_analytics.yaml
   - template: jinja
   - makedirs: True
 {% if grains.os_family == "RedHat" %}
@@ -49,15 +49,23 @@ include:
     - pkg: opencontrail_database_packages
 {% endif %}
 
+{% if database.version >= 4.1 %}
+/etc/kafka/consumer.properties:
+{%- else %}
 /usr/share/kafka/config/consumer.properties:
+{% endif %}
   file.managed:
-  - source: salt://opencontrail/files/{{ database.version }}/consumer.properties
+  - source: salt://opencontrail/files/kafka/{{ database.kafka_version }}/consumer.properties
   - template: jinja
   - makedirs: true
 
+{% if database.version >= 4.1 %}
+/etc/kafka/zookeeper.properties:
+{%- else %}
 /usr/share/kafka/config/zookeeper.properties:
+{% endif %}
   file.managed:
-  - source: salt://opencontrail/files/{{ database.version }}/zookeeper.properties
+  - source: salt://opencontrail/files/kafka/{{ database.kafka_version }}/zookeeper.properties
   - template: jinja
   - makedirs: true
 
@@ -89,7 +97,7 @@ docker-compose-contrail-database-env:
 
 {{ database.cassandra_config }}cassandra-env.sh:
   file.managed:
-  - source: salt://opencontrail/files/{{ database.version }}/database/cassandra-env.sh
+  - source: salt://opencontrail/files/cassandra/{{ database.cassandra_version }}/cassandra-env.sh
   - template: jinja
   - makedirs: True
 {% if grains.os_family == "RedHat" %}
@@ -100,7 +108,7 @@ docker-compose-contrail-database-env:
 {% if database.version >= 4.0 %}
 {{ database.cassandra_config }}cassandra-env-analytics.sh:
   file.managed:
-  - source: salt://opencontrail/files/{{ database.version }}/database/cassandra-env-analytics.sh
+  - source: salt://opencontrail/files/cassandra/{{ database.cassandra_version }}/cassandra-env-analytics.sh
   - template: jinja
   - makedirs: True
 {% if grains.os_family == "RedHat" %}
@@ -132,7 +140,11 @@ opencontrail_database_packages:
     - /etc/zookeeper/conf/zoo.cfg
     - /etc/default/zookeeper
     {%- if database.version >= 3.0 %}
+    {%- if database.version < 4.1 %}
     - /usr/share/kafka/config/server.properties
+    {%- else %}
+    - /etc/kafka/server.properties
+    {%- endif %}
     {%- if database.version < 4.0 or grains.get('init') != 'systemd' %}
     - /etc/contrail/supervisord_database_files/contrail-database-nodemgr.ini
     {%- endif %}
@@ -188,9 +200,13 @@ opencontrail_database_packages:
 
 {%- if database.version >= 3.0 %}
 
+{%- if database.version < 4.1 %}
 /usr/share/kafka/config/server.properties:
+{%- else %}
+/etc/kafka/server.properties:
+{%- endif %}
   file.managed:
-  - source: salt://opencontrail/files/{{ database.version }}/server.properties
+  - source: salt://opencontrail/files/kafka/{{ database.kafka_version }}/server.properties
   - template: jinja
   - makedirs: true
 
@@ -263,7 +279,11 @@ opencontrail_database_services:
     - file: /etc/zookeeper/conf/log4j.properties
     - file: /var/lib/cassandra/data
     - file: /etc/contrail/supervisord_database_files/contrail-database-nodemgr.ini
+    {%- if database.version < 4.1 %}
     - file: /usr/share/kafka/config/server.properties
+    {%- else %}
+    - file: /etc/kafka/server.properties
+    {%- endif %}
 
 opencontrail_zookeeper_service:
   service.running:
@@ -277,7 +297,11 @@ opencontrail_zookeeper_service:
     - file: /etc/default/zookeeper
     - file: /etc/zookeeper/conf/log4j.properties
     - file: /etc/contrail/supervisord_database_files/contrail-database-nodemgr.ini
+    {%- if database.version < 4.1 %}
     - file: /usr/share/kafka/config/server.properties
+    {%- else %}
+    - file: /etc/kafka/server.properties
+    {%- endif %}
 
 {%- if grains.get('virtual_subtype', None) == "Docker" %}
 
@@ -315,7 +339,11 @@ opencontrail_database_dockerng_services:
       - file: /etc/contrail/contrail-database-nodemgr.conf
       - file: /var/lib/zookeeper/myid
       - file: /etc/zookeeper/conf/log4j.properties
+    {%- if database.version < 4.1 %}
       - file: /usr/share/kafka/config/server.properties
+    {%- else %}
+      - file: /etc/kafka/server.properties
+    {%- endif %}
 {%- endif %}
 
 {%- endif %}

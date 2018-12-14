@@ -58,13 +58,13 @@ config:
   {%- if pillar.opencontrail.database is defined %}
   {%- from "opencontrail/map.jinja" import database with context %}
   cassandra.yaml:
-    source: "salt://opencontrail/files/{{ database.version }}/cassandra.yaml"
+    source: "salt://opencontrail/files/cassandra/{{ database.cassandra_version }}/cassandra.yaml"
     template: jinja
   logback.xml:
     source: "salt://opencontrail/files/{{ database.version }}/database/logback.xml"
     template: jinja
   cassandra-env.sh:
-    source: "salt://opencontrail/files/{{ database.version }}/database/cassandra-env.sh"
+    source: "salt://opencontrail/files/cassandra/{{ database.cassandra_version }}/cassandra-env.sh"
     template: jinja
   contrail-database-nodemgr.conf:
     source: "salt://opencontrail/files/{{ database.version }}/contrail-database-nodemgr.conf"
@@ -76,7 +76,7 @@ config:
     source: "salt://opencontrail/files/{{ database.version }}/zookeeper"
     template: jinja
   server.properties:
-    source: "salt://opencontrail/files/{{ database.version }}/server.properties"
+    source: "salt://opencontrail/files/kafka/{{ database.kafka_version }}/server.properties"
     template: jinja
   {%- endif %}
   {%- if pillar.opencontrail.collector is defined %}
