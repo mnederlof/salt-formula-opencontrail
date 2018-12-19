@@ -1,11 +1,11 @@
 Source: salt-formula-opencontrail
-Maintainer: Jakub Pavlik <jakub.pavlik@tcpcloud.eu>
+Maintainer: Mirantis Dev <dev@mirantis.com>
 Section: admin
 Priority: optional
 Build-Depends: salt-master, python, python-yaml, debhelper (>= 9),
  salt-formula-linux, salt-formula-prometheus
 Standards-Version: 3.9.6
-Homepage: https://wiki.openstack.org/wiki/OpenStackSalt
+Homepage: https://www.mirantis.com
 Vcs-Browser: https://github.com/openstack/salt-formula-opencontrail
 Vcs-Git: https://github.com/openstack/salt-formula-opencontrail.git
 
