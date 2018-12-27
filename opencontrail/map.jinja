@@ -220,6 +220,7 @@ web:
   Debian:
     pkgs:
          ['contrail-web-controller', 'gettext-base', 'nodejs-legacy']
+    redis_config_dir: '/etc/redis/'
     services:
     {%- if version < 4.0 %}
          ['contrail-webui-webserver', 'contrail-webui-jobserver']
@@ -236,6 +237,7 @@ web:
   RedHat:
     pkgs:
          ['contrail-web-controller']
+    redis_config_dir: '/etc/'
     services:
          ['supervisor-webui']
     database:
@@ -398,6 +400,7 @@ web:
   Debian:
     pkgs:
          ['contrail-web-controller', 'contrail-openstack-webui', 'nodejs', 'gettext-base']
+    redis_config_dir: '/etc/redis/'
     services:
     {%- if version < 4.0 %}
          ['supervisor-webui']
@@ -414,6 +417,7 @@ web:
   RedHat:
     pkgs:
          ['contrail-web-controller']
+    redis_config_dir: '/etc/'
     services:
          ['supervisor-webui']
     database:

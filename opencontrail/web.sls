@@ -9,6 +9,7 @@ opencontrail_web_packages:
   - require_in:
     - /etc/contrail/contrail-webui-userauth.js
     - /etc/contrail/config.global.js
+    - file: {{ web.redis_config_dir }}/redis_webui.conf
 {%- endif %}
 
 /etc/contrail/config.global.js:
@@ -20,6 +21,12 @@ opencontrail_web_packages:
   file.managed:
   - source: salt://opencontrail/files/{{ web.version }}/contrail-webui-userauth.js
   - template: jinja
+
+{{ web.redis_config_dir }}/redis_webui.conf:
+  file.managed:
+  - source: salt://opencontrail/files/{{ web.version }}/redis_webui.conf
+  - template: jinja
+  - makedirs: True
 
 {%- if not web.get('config_only', False) %}
 
@@ -33,6 +40,7 @@ opencontrail_web_services:
   - watch:
     - file: /etc/contrail/config.global.js
     - file: /etc/contrail/contrail-webui-userauth.js
+    - file: {{ web.redis_config_dir }}/redis_webui.conf
 
 {%- if grains.get('virtual_subtype', None) == "Docker" %}
 
@@ -74,6 +82,7 @@ opencontrail_web_dockerng_services:
     - watch:
       - file: /etc/contrail/config.global.js
       - file: /etc/contrail/contrail-webui-userauth.js
+      - file: {{ web.redis_config_dir }}/redis_webui.conf
 {%- endif %}
 {%- endif %}
 
