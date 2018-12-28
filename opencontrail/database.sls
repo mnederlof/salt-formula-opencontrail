@@ -83,6 +83,20 @@ docker-compose-contrail-database-env:
   - makedirs: true
   - require:
     - user: user_contrail_database
+
+{% if database.version >= 4 %}
+{% for logdir in [database.get('configdb_log_dir'), database.get('analyticsdb_log_dir')] %}
+{% if logdir %}
+{{ logdir }}/cassandra:
+  file.directory:
+  - makedirs: True
+{{ logdir }}/zookeeper:
+  file.directory:
+  - makedirs: True
+{% endif %}
+{% endfor %}
+{% endif %}
+
 {% endif %}
 
 {{ database.cassandra_config }}logback.xml:
