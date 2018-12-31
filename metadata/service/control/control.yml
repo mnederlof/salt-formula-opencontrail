@@ -11,7 +11,7 @@ parameters:
     opencontrail_admin_user: 'contrail'
     keystone_service_token: 'none'
     openstack_region: RegionOne
-    redis_password: 'none'
+    opencontrail_redis_password: 'none'
   opencontrail:
     common:
       version: ${_param:opencontrail_version}
@@ -134,7 +134,7 @@ parameters:
       cache:
         engine: redis
         host: ${_param:cluster_local_address}
-        password: ${_param:redis_password}
+        password: ${_param:opencontrail_redis_password}
         port: 6379
       members:
       - host: ${_param:cluster_node01_address}
