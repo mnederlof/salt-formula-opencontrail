@@ -15,6 +15,10 @@
 import logging
 import os
 import subprocess
+import time
+
+# Import Salt Libs
+import salt.utils.http
 
 
 MODULE_NAME = 'contrail_health'
@@ -78,3 +82,36 @@ def get_services_status():
                   'by {0} module.'.format(MODULE_NAME))
 
     return status_map
+
+'''
+    Check status of Contail API service on Virtual IP which is defined by pillars.
+
+    CLI Example:
+
+    .. code-block:: bash
+
+        salt 'ntw01*' contrail_health.get_api_status [wait_for=300] \\
+                [tries=20]
+
+    wait_for
+        Number of seconds how long to wait for API response.
+
+    tries
+        Number of tries. After each unsuccessful try will sleep for \\
+        (wait_for/tries).
+'''
+
+
+def get_api_status(wait_for=180, tries=20):
+    api_host = __pillar__['opencontrail'].get('client', {}).get('api', {}).get('host', {})
+    api_port = __pillar__['opencontrail']['client']['api']['port']
+    for t in range(0, tries):
+        try:
+            data = salt.utils.http.query("http://{0}:{1}".format(api_host, api_port), status=True)
+        except:
+            time.sleep(int(wait_for / tries))
+            continue
+        if data['status'] == 200:
+            return True
+
+    return False
