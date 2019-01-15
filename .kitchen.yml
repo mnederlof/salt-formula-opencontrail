@@ -41,78 +41,144 @@ provisioner:
     opencontrail_juniper.sls: {}
   pillars-from-files:
     linux_repo_cassandra.sls: tests/pillar/repo_cassandra.sls
-    linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_<%= ENV['OC_REPO'] || 'oc311' %>.sls
     linux_repo_openstack.sls: tests/pillar/repo_openstack.sls
 
 verifier:
   name: inspec
   sudo: true
 
+docker_images:
+  - &trusty-20163 <%=ENV['IMAGE_TRUSTY_20163'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-trusty-salt-2016.3/salt:2018_11_19'%>
+  - &trusty-20177 <%=ENV['IMAGE_TRUSTY_20177'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-trusty-salt-2017.7/salt:2018_11_19'%>
+  - &xenial-20163 <%=ENV['IMAGE_XENIAL_20163'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-2016.3/salt:2018_11_19'%>
+  - &xenial-20177 <%=ENV['IMAGE_XENIAL_20177'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-2017.7/salt:2018_11_19'%>
+  - &xenial-stable <%=ENV['IMAGE_XENIAL_STABLE'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-stable/salt:2018_11_19'%>
+
 platforms:
-  - name: <%=ENV['PLATFORM'] ||  'saltstack-ubuntu-xenial-salt-stable' %>
+  - name: trusty-2016.3
     driver_config:
-      image: <%=ENV['PLATFORM'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-stable/salt:2018_11_19'%>
+      image: *trusty-20163
+      platform: ubuntu
+
+  - name: trusty-2017.7
+    driver_config:
+      image: *trusty-20177
+      platform: ubuntu
+
+  - name: xenial-2016.3
+    driver_config:
+      image: *xenial-20163
+      platform: ubuntu
+
+  - name: xenial-2017.7
+    driver_config:
+      image: *xenial-20177
+      platform: ubuntu
+
+  - name: xenial-stable
+    driver_config:
+      image: *xenial-stable
       platform: ubuntu
 
 suites:
-
   - name: single3
     provisioner:
       pillars-from-files:
         opencontrail.sls: tests/pillar/single3.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
+
   - name: single40
     provisioner:
       grains:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/single40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+    excludes:
+      - trusty-2016.3
+      - trusty-2017.7
+
   - name: analytics3
     provisioner:
       pillars-from-files:
         opencontrail.sls: tests/pillar/analytics3.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
+
   - name: analytics40
     provisioner:
       grains:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/analytics40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+    excludes:
+      - trusty-2016.3
+      - trusty-2017.7
+
   - name: control3
     provisioner:
       pillars-from-files:
         opencontrail.sls: tests/pillar/control3.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
+
   - name: control40
     provisioner:
       grains:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/control40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+    excludes:
+      - trusty-2016.3
+      - trusty-2017.7
+
   - name: cluster3
     provisioner:
       pillars-from-files:
         opencontrail.sls: tests/pillar/cluster3.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
+
   - name: cluster40
     provisioner:
       grains:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/cluster40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+    excludes:
+      - trusty-2016.3
+      - trusty-2017.7
+
   # - name: tor3
   #   provisioner:
   #     pillars-from-files:
   #       opencontrail.sls: tests/pillar/tor3.sls
+  #       linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
+
   # - name: tor40
   #   provisioner:
   #     pillars-from-files:
   #       opencontrail.sls: tests/pillar/tor40.sls
+  #       linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+
   - name: vrouter3
     provisioner:
       pillars-from-files:
         opencontrail.sls: tests/pillar/vrouter3.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
+    excludes:
+      - trusty-2016.3
+      - trusty-2017.7
+
   - name: vrouter40
     provisioner:
       grains:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/vrouter40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+    excludes:
+      - trusty-2016.3
+      - trusty-2017.7
 
 # vim: ft=yaml sw=2 ts=2 sts=2 tw=125
