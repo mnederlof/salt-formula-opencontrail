@@ -105,13 +105,14 @@ def get_services_status():
 def get_api_status(wait_for=180, tries=20):
     api_host = __pillar__['opencontrail'].get('client', {}).get('api', {}).get('host', {})
     api_port = __pillar__['opencontrail']['client']['api']['port']
+
     for t in range(0, tries):
         try:
-            data = salt.utils.http.query("http://{0}:{1}".format(api_host, api_port), status=True)
-        except:
-            time.sleep(int(wait_for / tries))
-            continue
-        if data['status'] == 200:
-            return True
+            data = salt.utils.http.query("http://{0}:{1}".format(api_host, api_port), backend='requests', status=True)
+            if data['status'] == 200:
+                return True
+        except Exception as e:
+            LOG.error(e.message)
+        time.sleep(int(wait_for / tries))
 
     return False
