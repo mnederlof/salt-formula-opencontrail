@@ -1254,16 +1254,19 @@ def database_node_delete(name, **kwargs):
 
 def _get_vrouter_config(vnc_client, gvc_name=None):
     try:
+        vrouter_conf_objs = vnc_client._objects_list('global-vrouter-config', detail=True)
+        if len(vrouter_conf_objs) == 0:
+            return None
         if not gvc_name:
-            gvc_list = global_vrouter_config_list()
-            gvc_name = gvc_list.values()[0]['name']
+            return vrouter_conf_objs[0]
+        for gvc in vrouter_conf_objs:
+            if gvc.name == gvc_name:
+                return gvc
+    except Exception as e:
+       print("Error: {}".format(e))
+       pass
 
-        config = vnc_client.global_vrouter_config_read(
-            fq_name=['default-global-system-config', gvc_name])
-    except Exception:
-        config = None
-
-    return config
+    return None
 
 
 def linklocal_service_list(global_vrouter_config_name=None, **kwargs):
@@ -1334,6 +1337,11 @@ def linklocal_service_create(name, lls_ip, lls_port, ipf_dns_or_ip, ipf_port, gl
            'comment': ''}
     vnc_client = _auth(**kwargs)
     current_config = _get_vrouter_config(vnc_client, global_vrouter_config_name)
+    if current_config is None:
+        ret['result'] = False
+        ret['comment'] = "Global Vrouter Config doesn't exist and is required for LinkLocalSevices"
+        return ret
+
     service_entry = LinklocalServiceEntryType(
         linklocal_service_name=name,
         linklocal_service_ip=lls_ip,
@@ -1345,45 +1353,32 @@ def linklocal_service_create(name, lls_ip, lls_port, ipf_dns_or_ip, ipf_port, gl
         service_entry.ip_fabric_service_ip = ipf_dns_or_ip
         service_entry.ip_fabric_DNS_service_name = ''
 
-    if current_config is None:
-        new_services = LinklocalServicesTypes([service_entry])
-        new_config = GlobalVrouterConfig(linklocal_services=new_services)
-        if __opts__['test']:
-            ret['result'] = None
-            ret['comment'] = "Link local service " + name + " will be created"
-        else:
-            ret['comment'] = "Link local service " + name + " has been created"
-            ret['changes'] = {'LinkLocalSevice': {'old': '', 'new': name}}
-            vnc_client.global_vrouter_config_create(new_config)
+    _current_service_list = current_config.get_linklocal_services()
+    if _current_service_list is None:
+        service_list = {'linklocal_service_entry': []}
     else:
-        _current_service_list = current_config.get_linklocal_services()
-        if _current_service_list is None:
-            service_list = {'linklocal_service_entry': []}
-        else:
-            service_list = _current_service_list.__dict__
-        new_services = [service_entry]
-        for key, value in service_list.iteritems():
-            if key != 'linklocal_service_entry':
-                continue
-            for _entry in value:
-                entry = _entry.__dict__
-                if 'linklocal_service_name' in entry:
-                    if entry['linklocal_service_name'] == name:
-                        ret['comment'] = 'Link local service ' + name + ' already exists'
-                        return ret
-                    new_services.append(_entry)
-            if __opts__['test']:
-                ret['result'] = None
-                ret['comment'] = "LinkLocalSevices " + name + " will be created"
-            service_list[key] = new_services
-        new_config = GlobalVrouterConfig(linklocal_services=service_list)
-        if __opts__['test']:
-            ret['result'] = None
-            ret['comment'] = "LinkLocalSevices " + name + " will be updated"
-        else:
-            vnc_client.global_vrouter_config_update(new_config)
-            ret['comment'] = "LinkLocalSevices " + name + " has been created"
-            ret['changes'] = {'LinkLocalSevices': {'old': '', 'new': name}}
+        service_list = _current_service_list.__dict__
+    new_services = [service_entry]
+    value = service_list.get('linklocal_service_entry')
+    for _entry in value:
+        entry = _entry.__dict__
+        if 'linklocal_service_name' in entry:
+            if entry['linklocal_service_name'] == name:
+                ret['comment'] = 'Link local service ' + name + ' already exists'
+                return ret
+            new_services.append(_entry)
+    if __opts__['test']:
+        ret['result'] = None
+        ret['comment'] = "LinkLocalSevices " + name + " will be created"
+    service_list['linklocal_service_entry'] = new_services
+    new_config = GlobalVrouterConfig(linklocal_services=service_list)
+    if __opts__['test']:
+        ret['result'] = None
+        ret['comment'] = "LinkLocalSevices " + name + " will be updated"
+    else:
+        vnc_client.global_vrouter_config_update(new_config)
+        ret['comment'] = "LinkLocalSevices " + name + " has been created"
+        ret['changes'] = {'LinkLocalSevices': {'old': '', 'new': name}}
     return ret
 
 
@@ -1402,10 +1397,8 @@ def linklocal_service_delete(name, **kwargs):
            'result': True,
            'comment': ''}
     lls = linklocal_service_get(name)
-    print (lls)
     if name in lls:
         if __opts__['test']:
-            print " ------------ Test only  ------------"
             ret['result'] = None
             ret['comment'] = "Link local service " + name + " will be deleted"
             return ret
@@ -1433,7 +1426,10 @@ def linklocal_service_delete(name, **kwargs):
         new_config = GlobalVrouterConfig(linklocal_services=service_list)
         vnc_client.global_vrouter_config_update(new_config)
         ret['comment'] = "Link local service " + name + " will be deleted"
-        ret['changes'] = {'LinkLocalService': {'old': '', 'new': name}}
+        ret['changes'] = {'LinkLocalService': {'old': name, 'new': ''}}
+    else:
+        ret['result'] = False
+        ret['comment'] = "Global Vrouter Config doesn't exist and is required for LinkLocalSevices"
     return ret
 
 
