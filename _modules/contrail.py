@@ -116,13 +116,6 @@ def _get_ip(ip_w_pfx):
     return str(IPNetwork(ip_w_pfx).ip)
 
 
-def _create_floating_ip_pool(name, vn_obj, **kwargs):
-    vnc_client = _auth(**kwargs)
-    # create floating ip pool
-    fip_obj = FloatingIpPool(name=name, parent_obj=vn_obj)
-    vnc_client.floating_ip_pool_create(fip_obj)
-
-
 def virtual_router_list(**kwargs):
     '''
     Return a list of all Contrail virtual routers
@@ -1561,33 +1554,39 @@ def virtual_network_get(name, **kwargs):
     return ret
 
 
-def virtual_network_create(name, conf=None, **kwargs):
+def virtual_network_create(name, domain='default-domain', project='admin',
+                           ipam_domain='default-domain',
+                           ipam_project='default-project',
+                           ipam_name='default-network-ipam',
+                           router_external=None, route_target_list=None,
+                           subnet_conf=None, vntype_conf=None, **kwargs):
     '''
     Create Contrail virtual network
     CLI Example:
     .. code-block:: bash
-    salt '*' contrail.virtual_network_create name
 
-    salt.cmdRun(pepperEnv, 'ntw01*', 'salt-call contrail.virtual_network_create
-    "testicek" "{"external":"True","ip":"172.16.111.0","prefix":24,
-    "asn":64512,"target":10000}" ')
+    salt -C 'I@opencontrail:control:role:primary'
+        contrail.virtual_network_create public router_external=True
+        route_target_list=["target:64512:10000"]
+        subnet_conf=["ip_prefix":"172.16.111.0","ip_prefix_len":24]
 
     Parameters:
-    name required - name of the new network
-
-    conf (dict) optional:
-        domain (string) optional - which domain use for vn creation
-        project (string) optional - which project use for vn creation
-        ipam_domain (string) optional - domain for ipam
-        ipam_project (string) optional - project for ipam
-        ipam_name (string) optional - ipam name
+    name (str): name of the network (required)
+    domain (str): name of domain (optional)
+    project (str): name of project (optional)
+    ipam_domain (str): domain for ipam (optional)
+    ipam_project (str): project for ipam (optional)
+    ipam_name (str): name of IP Address Management (optional)
+    router_external (bool): When true, this virtual network is openstack router
+        external network. (optional)
+    route_target_list (list): route target list - format is
+        ['target:<asn>:<target>']
+    subnet_conf (dict):
         ip_prefix (string) optional - format is xxx.xxx.xxx.xxx
         ip_prefix_len (int) optional - format is xx
-        asn (int) optional - autonomus system number
-        target (int) optional - route target number
-        external (boolean) optional - set if network is external
-
+    vntype_conf (dict):
         allow_transit (boolean) optional - enable allow transit
+        vxlan_network_identifier (int) - VxLAN VNI value for network
         forwarding_mode (any of ['l2_l3','l2','l3']) optional
             - packet forwarding mode for this virtual network
         rpf (any of ['enabled','disabled']) optional
@@ -1596,112 +1595,164 @@ def virtual_network_create(name, conf=None, **kwargs):
         mirror_destination (boolean) optional
             - Mark the vn as mirror destination network
     '''
-    if conf is None:
-        conf = {}
-
-    # check for domain, is missing set to default-domain
-    if 'domain' in conf:
-        vn_domain = str(conf['domain'])
-    else:
-        vn_domain = 'default-domain'
-    # check for project, is missing set to admin
-    if 'project' in conf:
-        vn_project = str(conf['project'])
-    else:
-        vn_project = 'admin'
-    # check for ipam domain,default is default-domain
-    if 'ipam_domain' in conf:
-        ipam_domain = str(conf['ipam_domain'])
-    else:
-        ipam_domain = 'default-domain'
-    # check for ipam domain,default is default-domain
-    if 'ipam_project' in conf:
-        ipam_project = str(conf['ipam_project'])
-    else:
-        ipam_project = 'default-project'
-
-    if 'ipam_name' in conf:
-        ipam_name = conf['ipam_name']
-    else:
-        ipam_name = 'default-network-ipam'
-
     ret = {'name': name,
            'changes': {},
            'result': True,
            'comment': ''}
 
-    # list of existing vn networks
-    vn_networks = []
     vnc_client = _auth(**kwargs)
-    prj_obj = vnc_client.project_read(fq_name=[vn_domain,
-                                               vn_project])
-    # check if the network exists
-    vn_networks_list = vnc_client._objects_list('virtual_network')
-    fq = [vn_domain, vn_project, name]
-    for network in vn_networks_list['virtual-networks']:
-        if fq == network['fq_name']:
-            ret['comment'] = ("Virtual network with name "
-                              + name + " already exists")
-            return ret
+    fq_name = [domain, project, name]
+    prj_obj = vnc_client.project_read(fq_name=[domain,
+                                               project])
+    ipam_obj = vnc_client.network_ipam_read(fq_name=[ipam_domain,
+                                                     ipam_project,
+                                                     ipam_name])
+    if route_target_list:
+        route_target_list = RouteTargetList(route_target_list)
+    if subnet_conf:
+        if 'ip_prefix' in subnet_conf and 'ip_prefix_len' in subnet_conf:
+            ipam_sn = IpamSubnetType(subnet=SubnetType(
+                ip_prefix=subnet_conf['ip_prefix'],
+                ip_prefix_len=subnet_conf['ip_prefix_len']))
 
-    vn_obj = VirtualNetwork(name, prj_obj)
-    vn_type_obj = VirtualNetworkType()
-    # get ipam from default project and domain
-    ipam = vnc_client.network_ipam_read(fq_name=[ipam_domain,
-                                                 ipam_project,
-                                                 ipam_name])
+    # Check if the network exists
+    vn_obj_list = vnc_client.virtual_networks_list(parent_id=prj_obj.uuid)
+    if name in list(map(lambda x: x['fq_name'][2],
+                        vn_obj_list['virtual-networks'])):
+        changes = {}
+        vn_obj = vnc_client.virtual_network_read(fq_name=fq_name)
 
-    # create subnet
-    if 'ip_prefix' in conf and 'ip_prefix_len' in conf:
-        ipam_subnet_type = IpamSubnetType(subnet=SubnetType(
-                                          ip_prefix=conf['ip_prefix'],
-                                          ip_prefix_len=conf['ip_prefix_len']))
+        # Update IPAM properties
+        ipam_refs = vn_obj.get_network_ipam_refs()
+        subnet_detected = False
+        if subnet_conf and ipam_refs:
+            for ipam in ipam_refs:
+                if ipam_obj.get_uuid() == ipam['uuid']:
+                    ipam_subnet_list = ipam['attr'].get_ipam_subnets()
+                    for ipam_subnet_type in ipam_subnet_list:
+                        subnet_obj = ipam_subnet_type.get_subnet()
+                        ip_prefix = subnet_obj.get_ip_prefix()
+                        ip_prefix_len = subnet_obj.get_ip_prefix_len()
+                        if subnet_conf['ip_prefix'] == ip_prefix and \
+                                subnet_conf['ip_prefix_len'] == ip_prefix_len:
+                            subnet_detected = True
+        if subnet_conf and not subnet_detected:
+            changes['ipam_subnet'] = \
+                {'added': '{0}/{1}'.format(subnet_conf['ip_prefix'],
+                                           subnet_conf['ip_prefix_len'])}
+            vn_obj.add_network_ipam(ipam_obj,
+                                    VnSubnetsType(ipam_subnets=[ipam_sn]))
 
-        vn_subnets_type_obj = VnSubnetsType(ipam_subnets=[ipam_subnet_type])
-        vn_obj.add_network_ipam(ipam, vn_subnets_type_obj)
+        # Update VirtualNetwork properties
+        external = vn_obj.get_router_external()
+        if router_external is not None and router_external != external:
+            changes['router_external'] = {'from': external,
+                                          'to': router_external}
+            vn_obj.set_router_external(router_external)
+        if route_target_list:
+            changes['router_list'] = \
+                {'from': str(vn_obj.get_route_target_list()),
+                 'to': str(route_target_list)}
+            vn_obj.set_route_target_list(route_target_list)
 
-    # add route target to the network
-    if 'asn' in conf and 'target' in conf:
-        route_target_list_obj = RouteTargetList(["target:{0}:{1}"
-                                                 .format(conf['asn'],
-                                                         conf['target'])])
-        vn_obj.set_route_target_list(route_target_list_obj)
+        # Update VirtualNetworkType properties
+        if vntype_conf:
+            vn_type_obj = vn_obj.get_virtual_network_properties()
+            if vn_type_obj is None:
+                vn_type_obj = VirtualNetworkType()
 
-    if 'external' in conf:
-        vn_obj.set_router_external(conf['external'])
+            if 'allow_transit' in vntype_conf:
+                allow_transit_attr = vn_type_obj.get_allow_transit()
+                if vntype_conf['allow_transit'] != allow_transit_attr:
+                    changes['allow_transit'] = \
+                        {'from': allow_transit_attr,
+                         'to': vntype_conf['allow_transit']}
+                    vn_type_obj.set_allow_transit(vntype_conf['allow_transit'])
+            if 'vxlan_network_identifier' in vntype_conf:
+                vxlan_net_id = vn_type_obj.get_vxlan_network_identifier()
+                if vntype_conf['vxlan_network_identifier'] != vxlan_net_id:
+                    vn_type_obj.set_vxlan_network_identifier(
+                        vntype_conf['vxlan_network_identifier'])
+                    changes['vxlan_network_identifier'] = \
+                        {'from': vxlan_net_id,
+                         'to': vntype_conf['vxlan_network_identifier']}
+            if 'forwarding_mode' in vntype_conf:
+                forwarding_mode_attr = vn_type_obj.get_forwarding_mode()
+                if vntype_conf['forwarding_mode'] in ['l2_l3', 'l2', 'l3'] and \
+                        vntype_conf['forwarding_mode'] != forwarding_mode_attr:
+                    changes['forwarding_mode'] = \
+                        {'from': forwarding_mode_attr,
+                         'to': vntype_conf['forwarding_mode']}
+                    vn_type_obj.set_forwarding_mode(
+                        vntype_conf['forwarding_mode'])
+            if 'mirror_destination' in vntype_conf:
+                mirror_dst_attr = vn_type_obj.get_mirror_destination()
+                if vntype_conf['mirror_destination'] != mirror_dst_attr:
+                    changes['mirror_destination'] = \
+                        {'from': mirror_dst_attr,
+                         'to': vntype_conf['mirror_destination']}
+                    vn_type_obj.set_mirror_destination(
+                        vntype_conf['mirror_destination'])
+            if 'rpf' in vntype_conf:
+                rpf_attr = vn_type_obj.get_rpf()
+                if vntype_conf['rpf'] != rpf_attr:
+                    changes['rpf'] = \
+                        {'from': rpf_attr,
+                         'to': vntype_conf['rpf']}
+                    vn_type_obj.set_rpf(vntype_conf['rpf'])
+            vn_obj.set_virtual_network_properties(vn_type_obj)
 
-    if 'allow_transit' in conf:
-        vn_type_obj.set_allow_transit(conf['allow_transit'])
-
-    if 'forwarding_mode' in conf:
-        if conf['forwarding_mode'] in ['l2_l3', 'l2', 'l3']:
-            vn_type_obj.set_forwarding_mode(conf['forwarding_mode'])
-
-    if 'rpf' in conf:
-        vn_type_obj.set_rpf(conf['rpf'])
-
-    if 'mirror_destination' in conf:
-        vn_type_obj.set_mirror_destination(conf['mirror_destination'])
-
-    vn_obj.set_virtual_network_properties(vn_type_obj)
-
-    # create virtual network
-    if __opts__['test']:
-        ret['result'] = None
-        ret['comment'] = ("Virtual network with name {0} will be created"
-                          .format(name))
+        if changes:
+            ret['changes'] = changes
+            if __opts__['test']:
+                ret['result'] = None
+                ret['comment'] = "Virtual network " + name + " will be updated"
+            else:
+                ret['comment'] = "VirtualNetwork " + name + " has been updated"
+                vnc_client.virtual_network_update(vn_obj)
+        else:
+            ret['comment'] = 'Virtual network ' + name + \
+                             ' already exists and is updated'
     else:
-        vnc_client.virtual_network_create(vn_obj)
-        # if network is external create floating ip pool
-        if 'external' in conf:
-            if conf['external']:
-                pool_name = 'default'
-                _create_floating_ip_pool(pool_name,
-                                         vn_obj,
-                                         **kwargs)
+        vn_obj = VirtualNetwork(name, prj_obj)
 
-        ret['comment'] = ("Virtual network with name {0} was created"
-                          .format(name))
+        # Configure IPAM properties
+        if subnet_conf:
+            if 'ip_prefix' in subnet_conf and 'ip_prefix_len' in subnet_conf:
+                vn_obj.add_network_ipam(ipam_obj,
+                                        VnSubnetsType(ipam_subnets=[ipam_sn]))
+
+        # Configure VirtualNetwork properties
+        if router_external is not None:
+            vn_obj.set_router_external(router_external)
+        if route_target_list is not None:
+            vn_obj.set_route_target_list(route_target_list)
+
+        # Configure VirtualNetworkType properties
+        if vntype_conf:
+            vn_type_obj = VirtualNetworkType()
+            if 'allow_transit' in vntype_conf:
+                vn_type_obj.set_allow_transit(vntype_conf['allow_transit'])
+            if 'vxlan_network_identifier' in vntype_conf:
+                vn_type_obj.set_vxlan_network_identifier(
+                    vntype_conf['vxlan_network_identifier'])
+            if 'forwarding_mode' in vntype_conf:
+                if vntype_conf['forwarding_mode'] in ['l2_l3', 'l2', 'l3']:
+                    vn_type_obj.set_forwarding_mode(
+                        vntype_conf['forwarding_mode'])
+            if 'mirror_destination' in vntype_conf:
+                vn_type_obj.set_mirror_destination(vntype_conf['mirror_destination'])
+            if 'rpf' in vntype_conf:
+                vn_type_obj.set_rpf(vntype_conf['rpf'])
+            vn_obj.set_virtual_network_properties(vn_type_obj)
+
+        if __opts__['test']:
+            ret['result'] = None
+            ret['comment'] = "VirtualNetwork " + name + " will be created"
+        else:
+            vnc_client.virtual_network_create(vn_obj)
+            ret['comment'] = "VirtualNetwork " + name + " has been created"
+            ret['changes'] = {'VirtualNetwork': {'created': name}}
     return ret
 
 

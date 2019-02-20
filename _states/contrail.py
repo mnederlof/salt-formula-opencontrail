@@ -348,22 +348,6 @@ Enforce the virtual network existence
     virtual_network_create:
       contrail.virtual_network_present:
         - name: virtual_network_name
-        - conf:
-            domain: domain name
-            project: domain project
-            ipam_domain: ipam domain name
-            ipam_project: ipam project name
-            ipam_name: ipam name
-            ip_prefix: xxx.xxx.xxx.xxx
-            ip_prefix_len: 24
-            asn: 64512
-            target: 10000
-            external: False
-            allow_transit: False
-            forwading_mode: 'l2_l3'
-            rpf: 'disabled'
-            mirror_destination: False
-
 
 
 Enforce Floating Ip Pool configuration
@@ -834,16 +818,51 @@ def global_system_config_absent(name, **kwargs):
     return ret
 
 
-def virtual_network_present(name, conf=None, **kwargs):
+def virtual_network_present(name, domain='default-domain', project='admin',
+                            ipam_domain='default-domain',
+                            ipam_project='default-project',
+                            ipam_name='default-network-ipam',
+                            router_external=None, route_target_list=None,
+                            subnet_conf=None, vntype_conf=None, **kwargs):
     '''
     Ensure that the virtual network exists.
 
-    :param name: Name of the virtual network
-    :param conf: Key:Value pairs used for network creation
+    :param name (str): name of the network (required)
+    :param domain (str): name of domain (optional)
+    :param project (str): name of project (optional)
+    :param ipam_domain (str): domain for ipam (optional)
+    :param ipam_project (str): project for ipam (optional)
+    :param ipam_name (str): name of IP Address Management (optional)
+    :param router_external (bool): When true, this virtual network is openstack
+        router external network. (optional)
+    :param route_target_list (list): route target list - format is
+        ['target:<asn>:<target>']
+    :param subnet_conf (dict):
+        ip_prefix (string) optional - format is xxx.xxx.xxx.xxx
+        ip_prefix_len (int) optional - format is xx
+    :param vntype_conf (dict):
+        allow_transit (boolean) optional - enable allow transit
+        vxlan_network_identifier (int) - VxLAN VNI value for network
+        forwarding_mode (any of ['l2_l3','l2','l3']) optional
+            - packet forwarding mode for this virtual network
+        rpf (any of ['enabled','disabled']) optional
+            - Enable or disable Reverse Path Forwarding check
+        for this network
+        mirror_destination (boolean) optional
+            - Mark the vn as mirror destination network
     '''
 
-    ret = __salt__['contrail.virtual_network_create'](name, conf, **kwargs)
+    ret = __salt__['contrail.virtual_network_create'](
+        name, domain='default-domain', project='admin',
+        ipam_domain='default-domain',
+        ipam_project='default-project',
+        ipam_name='default-network-ipam',
+        router_external=None, route_target_list=None,
+        subnet_conf=None, vntype_conf=None, **kwargs)
+    if len(ret['changes']) == 0:
+        pass
     return ret
+
 
 def floating_ip_pool_present(vn_name,
                              vn_project,
