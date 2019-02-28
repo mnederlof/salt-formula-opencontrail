@@ -49,6 +49,11 @@ opencontrail_collector_packages:
   - source: salt://opencontrail/files/{{ collector.version }}/redis.conf
   - template: jinja
   - makedirs: True
+  - mode: 640
+{%- if collector.version < 4.0 %}
+  - user: redis
+  - group: redis
+{%- endif %}
 
 /etc/contrail/contrail-collector.conf:
   file.managed:
