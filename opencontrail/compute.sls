@@ -240,4 +240,13 @@ opencontrail_compute_services:
   - onlyif: /bin/false
   {%- endif %}
 
+{%- if pillar.get('telegraf', {}).get('agent', {}).get('enabled', False) %}
+/usr/local/bin/curl_detect_metadata.sh:
+  file.managed:
+  - source: salt://opencontrail/files/curl_detect_metadata_http.sh
+  - template: jinja
+  - mode: 755
+
+{%- endif %}
+
 {%- endif %}

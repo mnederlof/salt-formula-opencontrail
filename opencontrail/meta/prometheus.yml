@@ -163,6 +163,16 @@ server:
       annotations:
         summary: "OpenContrail BGP sessions are down"
         description: "{{ $value }} OpenContrail BGP sessions on the {{ $labels.host }} node are down for 2 minutes."
+    ContrailMetadataCheck:
+      if: >-
+        min(exec_contrail_instance_metadata_present) by (host) == 0
+      for: 15m
+      labels:
+        severity: critical
+        service: contrail
+      annotations:
+        summary: "OpenContrail metadata is unavailable"
+        description: "The OpenContrail metadata on the {{ $labels.host }} node is unavailable for 15 minutes."
     ContrailXMPPSessionsMissingEstablished:
       if: >-
         count(contrail_vrouter_xmpp) * 2 - sum(contrail_xmpp_session_up_count) > 0

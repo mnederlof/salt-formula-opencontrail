@@ -4,6 +4,14 @@ agent:
   input:
   {%- if collector.get('enabled', False) or database.get('enabled', False) or control.get('enabled', False)
       or web.get('enabled', False) or compute.get('enabled', False) %}
+    {%- if compute.get('enabled', False) %}
+    exec:
+      commands:
+        - "/usr/local/bin/curl_detect_metadata.sh"
+      interval: "30s"
+      data_format: "json"
+      timeout: "10s"
+    {%- endif %}
     procstat:
       process:
     {%- if collector.get('enabled', False) %}
