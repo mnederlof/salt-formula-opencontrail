@@ -73,7 +73,7 @@ def _auth(**kwargs):
     use_ssl = False
     auth_host = kwargs.get('auth_host_ip')
     vnc_lib = vnc_api.VncApi(user, password, tenant_name,
-                             api_host, api_port, api_base_url, wait_for_connect=True,
+                             api_host, api_port, api_base_url, wait_for_connect=False,
                              api_server_use_ssl=use_ssl, auth_host=auth_host)
 
     return vnc_lib
