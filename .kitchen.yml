@@ -48,26 +48,14 @@ verifier:
   sudo: true
 
 docker_images:
-  - &trusty-20163 <%=ENV['IMAGE_TRUSTY_20163'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-trusty-salt-2016.3/salt:2018_11_19'%>
   - &trusty-20177 <%=ENV['IMAGE_TRUSTY_20177'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-trusty-salt-2017.7/salt:2018_11_19'%>
-  - &xenial-20163 <%=ENV['IMAGE_XENIAL_20163'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-2016.3/salt:2018_11_19'%>
   - &xenial-20177 <%=ENV['IMAGE_XENIAL_20177'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-2017.7/salt:2018_11_19'%>
   - &xenial-stable <%=ENV['IMAGE_XENIAL_STABLE'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-stable/salt:2018_11_19'%>
 
 platforms:
-  - name: trusty-2016.3
-    driver_config:
-      image: *trusty-20163
-      platform: ubuntu
-
   - name: trusty-2017.7
     driver_config:
       image: *trusty-20177
-      platform: ubuntu
-
-  - name: xenial-2016.3
-    driver_config:
-      image: *xenial-20163
       platform: ubuntu
 
   - name: xenial-2017.7
@@ -95,7 +83,6 @@ suites:
         opencontrail.sls: tests/pillar/single40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
     excludes:
-      - trusty-2016.3
       - trusty-2017.7
 
   - name: analytics3
@@ -112,7 +99,6 @@ suites:
         opencontrail.sls: tests/pillar/analytics40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
     excludes:
-      - trusty-2016.3
       - trusty-2017.7
 
   - name: control3
@@ -129,7 +115,6 @@ suites:
         opencontrail.sls: tests/pillar/control40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
     excludes:
-      - trusty-2016.3
       - trusty-2017.7
 
   - name: cluster3
@@ -146,7 +131,6 @@ suites:
         opencontrail.sls: tests/pillar/cluster40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
     excludes:
-      - trusty-2016.3
       - trusty-2017.7
 
   # - name: tor3
@@ -167,7 +151,6 @@ suites:
         opencontrail.sls: tests/pillar/vrouter3.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
     excludes:
-      - trusty-2016.3
       - trusty-2017.7
 
   - name: vrouter40
@@ -178,7 +161,6 @@ suites:
         opencontrail.sls: tests/pillar/vrouter40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
     excludes:
-      - trusty-2016.3
       - trusty-2017.7
 
 # vim: ft=yaml sw=2 ts=2 sts=2 tw=125
