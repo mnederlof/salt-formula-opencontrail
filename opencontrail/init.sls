@@ -24,3 +24,8 @@ include:
 {% if pillar.opencontrail.common is defined %}
 - opencontrail.common
 {% endif %}
+{%- if pillar.opencontrail.collector is defined or
+       pillar.opencontrail.control is defined or
+       pillar.opencontrail.database is defined %}
+- opencontrail.monitoring
+{%- endif %}

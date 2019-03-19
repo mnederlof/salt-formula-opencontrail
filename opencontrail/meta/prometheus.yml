@@ -133,6 +133,42 @@ server:
     {%- raw %}
         summary: "{{ $labels.name }} service outage"
         description: "All {{ $labels.process_name }} processes are down."
+    ContrailHealthCheckDisabled:
+      if: >-
+        absent(contrail_health_exit_code) == 1
+      labels:
+        severity: critical
+        service: contrail
+      annotations:
+        summary: "Contrail healthcheck disabled"
+        description: "Contrail healthcheck is disabled."
+    ContrailHealthCheckFailed:
+      if: >-
+        contrail_health_exit_code != 0
+      labels:
+        severity: critical
+        service: contrail
+      annotations:
+        summary: "Contrail healthcheck failed"
+        description: "Contrail healthcheck failed for the {{ $labels.contrail_service }} on the {{ $labels.host }} node."
+    ContrailGlobalVrouterConfigCheckDisabled:
+      if: >-
+        absent(contrail_global_vrouter_config_exit_code) == 1
+      labels:
+        severity: critical
+        service: contrail
+      annotations:
+        summary: "Contrail global vrouter config check disabled"
+        description: "Contrail global vrouter config check is disabled."
+    ContrailGlobalVrouterConfigCheckFailed:
+      if: >-
+        contrail_global_vrouter_config_exit_code != 0
+      labels:
+        severity: critical
+        service: contrail
+      annotations:
+        summary: "Contrail global vrouter config check failed"
+        description: "Contrail global vrouter config check failed on the {{ $labels.host }} node."
     ContrailBGPSessionsNoEstablished:
       if: >-
         max(contrail_bgp_session_count) by (host) == 0
