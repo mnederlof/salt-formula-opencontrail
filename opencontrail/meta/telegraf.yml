@@ -12,6 +12,24 @@ agent:
       data_format: "json"
       timeout: "10s"
     {%- endif %}
+    {%- if pillar.opencontrail.collector is defined or
+           pillar.opencontrail.control is defined or
+           pillar.opencontrail.database is defined %}
+    monitor_contrail_health:
+      template: telegraf/files/input/exec.conf
+      commands:
+      - /usr/local/bin/check_contrail_health.py
+      data_format: influx
+      interval: 30s
+    {%- endif %}
+    {%- if pillar.opencontrail.control is defined %}
+    monitor_global_vrouter_config:
+      template: telegraf/files/input/exec.conf
+      commands:
+      - /usr/local/bin/check_global_vrouter_config.py
+      data_format: influx
+      interval: 30s
+    {%- endif %}
     procstat:
       process:
     {%- if collector.get('enabled', False) %}
