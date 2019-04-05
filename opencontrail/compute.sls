@@ -206,6 +206,8 @@ contrail_load_vrouter_kernel_module:
 
 {%- if compute.get('tor', {}).get('enabled', False) %}
 
+{%- if compute.version < 4.0 %}
+
 {% for agent_name, agent in compute.tor.agent.iteritems() %}
 
 /etc/contrail/contrail-tor-agent-{{ agent.id }}.conf:
@@ -217,7 +219,7 @@ contrail_load_vrouter_kernel_module:
   - watch_in:
     - service: opencontrail_compute_services
 
-{%- if compute.version < 4.0 or grains.get('init') != 'systemd' %}
+{%- if grains.get('init') != 'systemd' %}
 
 /etc/contrail/supervisord_vrouter_files/contrail-tor-agent-{{ agent.id }}.ini:
   file.managed:
@@ -229,8 +231,20 @@ contrail_load_vrouter_kernel_module:
     - service: opencontrail_compute_services
 
 {%- endif %}
-
 {%- endfor %}
+
+{%- else %}
+
+provision_tor_agents:
+  cmd.script:
+  - source: "salt://opencontrail/files/{{ compute.version }}/tor/provision_tor_agents.sh"
+  - template: jinja
+  - cwd: /
+  - require:
+    - pkg: opencontrail_vrouter_package_vrouter_agent
+
+{%- endif %}
+
 {%- endif %}
 
 opencontrail_compute_services:

@@ -12,6 +12,14 @@ opencontrail:
       engine: neutron
       host: 127.0.0.1
       port: 9696
+  client:
+    api:
+      host: 127.0.0.1
+    identity:
+      host: 127.0.0.1
+      user: contrail
+      password: contrail
+      tenant: admin
   compute:
     version: 4.0
     enabled: True
@@ -35,16 +43,21 @@ opencontrail:
       dns: 127.0.0.1
       mtu: 9000
     tor:
-      enabled: true
-      bind:
-        port: 8086
+      enabled: false
       agent:
         tor01:
           id: 0
           address: 127.0.0.1
-          port: 6632
-          ssl:
-            enabled: True
+          tor_name: TOR01
+          tor_ip: 127.0.0.1
+          tor_ovs_protocol: tcp
+          tor_ovs_port: 6640
+          http_server_port: 9090
+          tsn_ip: 127.0.0.1
+          tor_tunnel_ip: 127.0.0.1
+          tor_vendor_name: ovs
+          xmpp_auth_enable: False
+          xmpp_dns_auth_enable: False
     lbaas:
       enabled: true
       secret_manager:

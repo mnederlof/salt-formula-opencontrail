@@ -4,13 +4,18 @@ parameters:
   opencontrail:
     compute:
       tor:
-        enabled: true
-        bind:
-          port: 8086
+        enabled: True
         agent:
           tor01:
             id: 0
-            address: ${_param:single_address}
-            port: 6632
-            ssl:
-              enabled: True
+            address: ${_param:cluster_local_address}
+            tor_name: TOR01
+            tor_ip: 127.0.0.1
+            tor_ovs_port: 6640
+            tor_ovs_protocol: tcp
+            http_server_port: 9090
+            tsn_ip: ${_param:cluster_vip_address}
+            tor_tunnel_ip: 127.0.0.1
+            tor_vendor_name: ovs
+            xmpp_auth_enable: False
+            xmpp_dns_auth_enable: False

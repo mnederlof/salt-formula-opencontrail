@@ -644,18 +644,23 @@ Configure TSN nodes
 
   opencontrail:
     compute:
-      enabled: true
+      enabled: True
       tor:
-        enabled: true
-        bind:
-          port: 8086
+        enabled: True
         agent:
           tor01:
             id: 0
-            port: 6632
-            host: 127.0.0.1
             address: 127.0.0.1
-
+            tor_name: TOR1
+            tor_ip: 10.11.0.100
+            tor_ovs_port: 6640
+            tor_ovs_protocol: tcp
+            http_server_port: 9090
+            tsn_ip: 127.0.0.1
+            tor_tunnel_ip: 10.10.0.100
+            tor_vendor_name: ovs
+            xmpp_auth_enable: False
+            xmpp_dns_auth_enable: False
 
 Set up metadata secret for the Vrouter
 --------------------------------------
