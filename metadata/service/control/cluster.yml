@@ -17,6 +17,7 @@ parameters:
       version: ${_param:opencontrail_version}
       identity:
         engine: keystone
+        protocol: ${_param:opencontrail_identity_protocol}
         host: ${_param:cluster_vip_address}
         port: ${_param:opencontrail_identity_port}
         token: '${_param:keystone_service_token}'
@@ -57,6 +58,7 @@ parameters:
         engine: keystone
         version: ${_param:opencontrail_identity_version}
         region: ${_param:openstack_region}
+        protocol: ${_param:opencontrail_identity_protocol}
         host: ${_param:cluster_vip_address}
         port: ${_param:opencontrail_identity_port}
         user: ${_param:opencontrail_admin_user}
@@ -123,6 +125,7 @@ parameters:
         engine: keystone
         version: ${_param:opencontrail_identity_version}
         region: RegionOne
+        protocol: ${_param:opencontrail_identity_protocol}
         host: ${_param:cluster_vip_address}
         port: ${_param:opencontrail_identity_port}
         user: ${_param:opencontrail_admin_user}

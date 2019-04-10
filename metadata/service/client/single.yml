@@ -13,6 +13,7 @@ parameters:
       version: ${_param:opencontrail_version}
       identity:
         engine: keystone
+        protocol: ${_param:opencontrail_identity_protocol}
         host: ${_param:cluster_local_address}
         port: ${_param:opencontrail_identity_port}
         version: ${_param:opencontrail_identity_version}

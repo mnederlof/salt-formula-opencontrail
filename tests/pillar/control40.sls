@@ -4,6 +4,7 @@ opencontrail:
     config_only: true
     identity:
       engine: keystone
+      protocol: http
       host: 127.0.0.1
       port: 35357
       token: token
@@ -54,6 +55,7 @@ opencontrail:
       version: '2.0'
       region: RegionOne
       host: 127.0.0.1
+      protocol: http
       port: 35357
       user: admin
       password: password

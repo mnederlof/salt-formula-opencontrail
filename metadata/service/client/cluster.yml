@@ -14,6 +14,7 @@ parameters:
       version: ${_param:opencontrail_version}
       identity:
         engine: keystone
+        protocol: ${_param:opencontrail_identity_protocol}
         host: ${_param:openstack_control_address}
         port: ${_param:opencontrail_identity_port}
         version: ${_param:opencontrail_identity_version}
