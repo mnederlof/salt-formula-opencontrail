@@ -93,7 +93,11 @@ config:
   Debian:
     pkgs:
     - 'contrail-config-openstack'
+    {%- if version < 4.0 %}
+    {%- if ifmap == 'irond' %}
     - 'ifmap-server'
+    {%- endif %}
+    {%- endif %}
     services:
     {%- if version < 4.0 %}
     {%- if ifmap == 'irond' %}
