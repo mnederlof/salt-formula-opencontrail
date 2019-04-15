@@ -726,7 +726,11 @@ def global_vrouter_config_create(name, parent_type, encap_priority, vxlan_vn_id_
 
     .. code-block:: bash
 
-        salt '*' contrail.global_vrouter_config_create name=global-vrouter-config parent_type=global-system-config encap_priority="MPLSoUDP,MPLSoGRE" vxlan_vn_id_mode="automatic" fq_names="['default-global-system-config', 'default-global-vrouter-config']"
+        salt '*' contrail.global_vrouter_config_create \
+        name=global-vrouter-config parent_type=global-system-config \
+        encap_priority="MPLSoUDP,MPLSoGRE" vxlan_vn_id_mode="automatic" \
+        flow_export_rate=None \
+        fq_names="['default-global-system-config', 'default-global-vrouter-config']"
     '''
     ret = {'name': name,
            'changes': {},
