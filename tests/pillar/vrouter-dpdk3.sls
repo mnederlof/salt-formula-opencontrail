@@ -3,6 +3,7 @@ opencontrail:
     version: 3.0
     identity:
       engine: keystone
+      protocol: http
       host: 127.0.0.1
       port: 35357
       token: token
