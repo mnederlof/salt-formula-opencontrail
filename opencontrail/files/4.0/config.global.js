@@ -75,7 +75,7 @@ config.endpoints.opServiceType = 'OpServer';
 config.regions = {};
 
 {%- if web.identity.engine != "none" %}
-config.regions['{{ web.identity.get("region", "RegionOne") }}'] = 'http://{{ web.identity.host }}:5000/v{{ web.identity.version }}';
+config.regions['{{ web.identity.get("region", "RegionOne") }}'] = '{{ web.identity.protocol }}://{{ web.identity.host }}:5000/v{{ web.identity.version }}';
 {%- endif %}
 
 /****************************************************************************
@@ -139,7 +139,7 @@ config.networkManager.ca = '';
 config.imageManager = {};
 config.imageManager.ip = '{{ web.identity.host }}';
 config.imageManager.port = '9292';
-config.imageManager.authProtocol = 'http';
+config.imageManager.authProtocol = '{{ web.identity.protocol }};
 config.imageManager.apiVersion = ['v1', 'v2'];
 config.imageManager.strictSSL = false;
 config.imageManager.ca = '';
@@ -147,7 +147,7 @@ config.imageManager.ca = '';
 config.computeManager = {};
 config.computeManager.ip = '{{ web.identity.host }}';
 config.computeManager.port = '8774';
-config.computeManager.authProtocol = 'http';
+config.computeManager.authProtocol = '{{ web.identity.protocol }}';
 config.computeManager.apiVersion = ['v1.1', 'v2'];
 config.computeManager.strictSSL = false;
 config.computeManager.ca = '';
@@ -155,7 +155,7 @@ config.computeManager.ca = '';
 config.identityManager = {};
 config.identityManager.ip = '{{ web.identity.host }}';
 config.identityManager.port = '5000';
-config.identityManager.authProtocol = 'http';
+config.identityManager.authProtocol = '{{ web.identity.protocol }}';
 /******************************************************************************
  * Note: config.identityManager.apiVersion is not controlled by boolean flag
  * config.serviceEndPointFromConfig. If specified apiVersion here, then these
@@ -170,7 +170,7 @@ config.identityManager.ca = '';
 config.storageManager = {};
 config.storageManager.ip = '{{ web.identity.host }}';
 config.storageManager.port = '8776';
-config.storageManager.authProtocol = 'http';
+config.storageManager.authProtocol = '{{ web.identity.protocol }}';
 config.storageManager.apiVersion = ['v1'];
 config.storageManager.strictSSL = false;
 config.storageManager.ca = '';

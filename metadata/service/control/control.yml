@@ -5,6 +5,7 @@ classes:
 parameters:
   _param:
     opencontrail_version: 2.2
+    opencontrail_identity_protocol: http
     opencontrail_identity_port: 35357
     opencontrail_identity_version: '2.0'
     opencontrail_admin_password: 'none'
@@ -152,6 +153,7 @@ parameters:
         engine: keystone
         version: ${_param:opencontrail_identity_version}
         region: RegionOne
+        protocol: ${_param:opencontrail_identity_protocol}
         host: ${_param:cluster_vip_address}
         port: ${_param:opencontrail_identity_port}
         user: ${_param:opencontrail_admin_user}

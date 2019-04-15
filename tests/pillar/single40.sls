@@ -151,6 +151,7 @@ opencontrail:
     identity:
       engine: keystone
       version: '2.0'
+      protocol: http
       host: 127.0.0.1
       port: 35357
       user: admin
