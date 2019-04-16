@@ -82,7 +82,7 @@ suites:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/single40.sls
-        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
     excludes:
       - trusty-2017.7
 
@@ -98,7 +98,7 @@ suites:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/analytics40.sls
-        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
     excludes:
       - trusty-2017.7
 
@@ -114,7 +114,7 @@ suites:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/control40.sls
-        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
     excludes:
       - trusty-2017.7
 
@@ -130,7 +130,7 @@ suites:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/cluster40.sls
-        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
     excludes:
       - trusty-2017.7
 
@@ -144,7 +144,7 @@ suites:
   #   provisioner:
   #     pillars-from-files:
   #       opencontrail.sls: tests/pillar/tor40.sls
-  #       linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+  #       linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
 
   - name: vrouter3
     provisioner:
@@ -160,7 +160,7 @@ suites:
         init: 'systemd'
       pillars-from-files:
         opencontrail.sls: tests/pillar/vrouter40.sls
-        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc40.sls
+        linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
     excludes:
       - trusty-2017.7
 
