@@ -27,6 +27,11 @@ opencontrail_web_packages:
   - source: salt://opencontrail/files/{{ web.version }}/redis_webui.conf
   - template: jinja
   - makedirs: True
+  - mode: 640
+{%- if web.version < 4.0 %}
+  - user: redis
+  - group: redis
+{%- endif %}
 
 {%- if not web.get('config_only', False) %}
 
