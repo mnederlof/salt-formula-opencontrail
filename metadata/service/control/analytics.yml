@@ -5,6 +5,7 @@ classes:
 parameters:
   _param:
     opencontrail_version: 2.2
+    opencontrail_identity_protocol: http
     opencontrail_identity_port: 35357
     opencontrail_identity_version: '2.0'
     opencontrail_admin_password: 'none'

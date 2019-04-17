@@ -56,6 +56,7 @@ Config, control, analytics, database, web -- altogether on one node.
           address: http://mirror.robotice.cz/contrail-havana/
         identity:
           engine: keystone
+          protocol: http
           host: 127.0.0.1
           port: 35357
           token: token
@@ -93,6 +94,7 @@ Config, control, analytics, database, web -- altogether on one node.
           engine: keystone
           version: '2.0'
           region: RegionOne
+          protocol: http
           host: 127.0.0.1
           port: 35357
           user: admin
@@ -181,6 +183,7 @@ Config, control, analytics, database, web -- altogether on one node.
         identity:
           engine: keystone
           version: '2.0'
+          protocol: http
           host: 127.0.0.1
           port: 35357
           user: admin
@@ -205,6 +208,7 @@ nodes.
           address: http://mirror.robotice.cz/contrail-havana/
         identity:
           engine: keystone
+          protocol: http
           host: 127.0.0.1
           port: 35357
           token: token
@@ -250,6 +254,7 @@ nodes.
           engine: keystone
           version: '2.0'
           region: RegionOne
+          protocol: http
           host: 127.0.0.1
           port: 35357
           user: admin
@@ -355,6 +360,7 @@ nodes.
         identity:
           engine: keystone
           version: '2.0'
+          protocol: http
           host: 127.0.0.1
           port: 35357
           user: admin
@@ -375,6 +381,7 @@ Config, control, database, web.
         version: 2.2
         identity:
           engine: keystone
+          protocol: http
           host: 127.0.0.1
           port: 35357
           token: token
@@ -420,6 +427,7 @@ Config, control, database, web.
           engine: keystone
           version: '2.0'
           region: RegionOne
+          protocol: http
           host: 127.0.0.1
           port: 35357
           user: admin
@@ -497,6 +505,7 @@ Config, control, database, web.
         identity:
           engine: keystone
           version: '2.0'
+          protocol: http
           host: 127.0.0.1
           port: 35357
           user: admin
@@ -515,6 +524,7 @@ Analytics and database on an analytic node(s)
         version: 2.2
         identity:
           engine: keystone
+          protocol: http
           host: 127.0.0.1
           port: 35357
           token: token
@@ -589,6 +599,7 @@ Vrouter configuration on a compute node(s)
         version: 2.2
         identity:
           engine: keystone
+          protocol: http
           host: 127.0.0.1
           port: 35357
           token: token
