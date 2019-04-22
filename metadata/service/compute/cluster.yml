@@ -5,4 +5,15 @@ classes:
 parameters:
   opencontrail:
     compute:
-      enabled: true
+      enabled: True
+      version: ${_param:opencontrail_version}
+      disable_flow_collection: False
+      bind:
+        address: ${_param:single_address}
+      interface:
+        address: ${_param:opencontrail_compute_address}
+        dev: ${_param:opencontrail_compute_iface}
+        gateway: ${_param:opencontrail_compute_gateway}
+        mask: ${_param:opencontrail_compute_iface_mask}
+        dns: ${_param:opencontrail_compute_dns}
+        mtu: 9000

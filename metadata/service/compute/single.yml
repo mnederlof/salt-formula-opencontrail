@@ -3,12 +3,17 @@ applications:
 classes:
 - service.opencontrail.support
 parameters:
-  _param:
-    opencontrail_version: 2.2
   opencontrail:
     compute:
-      version: ${_param:opencontrail_version}
       enabled: true
+      version: ${_param:opencontrail_version}
+      interface:
+        address: ${_param:opencontrail_compute_address}
+        dev: ${_param:opencontrail_compute_iface}
+        gateway: ${_param:opencontrail_compute_gateway}
+        mask: ${_param:opencontrail_compute_iface_mask}
+        dns: ${_param:opencontrail_compute_dns}
+        mtu: 9000
   nova:
     compute:
       networking: contrail
