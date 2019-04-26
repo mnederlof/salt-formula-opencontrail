@@ -40,4 +40,10 @@ orchestrate:
     require:
     - salt: opencontrail.config
     - salt: opencontrail.collector
+dependency:
+  {% from "opencontrail/map.jinja" import client with context %}
+  {%- if client.get('enabled', False)  %}
+  engine: pkg
+  pkgs: {{ client.pkgs }}
+  {%- endif %}
 
