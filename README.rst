@@ -1443,6 +1443,96 @@ Additional states could be defined for every service as expected states for vali
 ``contrail-schema``, ``contrail-device-manager`` and ``contrail-svc-monitor`` config services already
 have additional ``backup`` state by default.
 
+Setup Sandesh rate limit
+------------------------
+Sandesh send rate limit can be used to throttle system logs transmitted per second. System logs are
+dropped if the sending rate is exceeded.
+
+It is possible to use only global limit for all services of contrail component.
+
+.. code-block:: yaml
+
+  opencontrail:
+    control:
+      ....
+      sandesh_send_rate_limits:
+        global: 10
+      ....
+
+
+Global limit and limit for specific service can be defined together where specific service limit
+has higher priority.
+
+.. code-block:: yaml
+
+  opencontrail:
+    config:
+      ....
+      sandesh_send_rate_limits:
+        global: 10
+        config_api: 3
+        schema: 5
+      ....
+
+Only specific service limit can be defined. In this case other services of Contrail component
+keep default value (0) of `sandesh_send_rate_limit`
+
+.. code-block:: yaml
+
+  opencontrail:
+    collector:
+      ....
+      sandesh_send_rate_limits:
+        collector: 100
+        analytics-api: 50
+      ....
+
+Full list:
+
+.. code-block:: yaml
+
+  opencontrail:
+    control:
+      ....
+      sandesh_send_rate_limits:
+        global: 100
+        control: 10
+        dns: 10
+        nodemgr: 10
+      ....
+
+    config:
+      ....
+      sandesh_send_rate_limits:
+        global: 100
+        config_api: 10
+        schema: 10
+        svc_monitor: 10
+        device_manager: 10
+        nodemgr: 10
+      ....
+
+    collector:
+      ....
+      sandesh_send_rate_limits:
+        global: 100
+        collector: 10
+        analytics_api: 10
+        query_engine: 10
+        alarm_gen: 10
+        snmp_collector: 10
+        topology: 10
+        nodemgr: 10
+      ....
+
+    compute:
+      ....
+      sandesh_send_rate_limits:
+        global: 100
+        agent: 10
+        nodemgr: 10
+      ....
+
 Usage
 =====
 
