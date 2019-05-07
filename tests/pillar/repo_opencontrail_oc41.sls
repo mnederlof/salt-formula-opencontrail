@@ -18,11 +18,10 @@ linux:
         - pin: 'release a=nightly'
           priority: 1100
           package: '*'
-      # TODO: deprecate repos on fuel-infra (use mirror.mirantis.com), at the moment tests use same repos as for docker images
-      mcp_ocata_fuel_infra:
-        source: "deb [arch=amd64] http://mirror.fuel-infra.org/mcp-repos/ocata/{{ grains.get('oscodename') }} ocata main"
+      mcp_openstack_ocata:
+        source: "deb [arch=amd64] http://mirror.mirantis.com/nightly/openstack-ocata/{{ grains.get('oscodename') }} {{ grains.get('oscodename') }} main"
         architectures: amd64
-        key_url: "http://mirror.fuel-infra.org/mcp-repos/ocata/{{ grains.get('oscodename') }}/archive-mcpocata.key"
+        key_url: "http://mirror.mirantis.com/nightly/openstack-ocata/{{ grains.get('oscodename') }}/archive-ocata.key"
         pin:
         - pin: 'release a=ocata'
           priority: 1100
