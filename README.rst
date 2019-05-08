@@ -1533,6 +1533,22 @@ Full list:
         nodemgr: 10
       ....
 
+Define aging time for flow-records in seconds
+---------------------------------------------
+
+Flows are aged out based on inactivity for a specific period of time. By default,
+the timeout value is 180 seconds. This can be modified by configuring flow_cache_timeout for
+contrail-vrouter-agent service:
+
+.. code-block:: yaml
+
+    opencontrail:
+      ....
+      compute
+        ....
+        flow_cache_timeout: 180
+        ....
+
 Usage
 =====
 
