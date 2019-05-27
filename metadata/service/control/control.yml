@@ -3,16 +3,6 @@ applications:
 classes:
 - service.opencontrail.support
 parameters:
-  _param:
-    opencontrail_version: 2.2
-    opencontrail_identity_protocol: http
-    opencontrail_identity_port: 35357
-    opencontrail_identity_version: '2.0'
-    opencontrail_admin_password: 'none'
-    opencontrail_admin_user: 'contrail'
-    keystone_service_token: 'none'
-    openstack_region: RegionOne
-    opencontrail_redis_password: 'none'
   opencontrail:
     common:
       version: ${_param:opencontrail_version}
