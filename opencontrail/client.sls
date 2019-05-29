@@ -153,6 +153,8 @@ opencontrail_client_linklocal_service_{{ linklocal_service_name }}:
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
+  - require:
+    - contrail: global_vrouter_config_create
 
 {%- endfor %}
 
