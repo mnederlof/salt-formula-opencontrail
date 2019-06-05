@@ -1533,6 +1533,26 @@ Full list:
         nodemgr: 10
       ....
 
+Disable database writes of collector
+------------------------------------
+
+Sandesh messages aren't written to analytics database by changing following parameters to `true`.
+Default value all of these parametes is `false`. Is possible to change one or more parametes.
+
+.. code-block:: yaml
+
+    opencontrail:
+      ....
+      collector
+        ....
+        database:
+          ....
+          disable_all_writes: false
+          disable_statistics_writes: true
+          disable_message_writes: false
+          ....
+
+
 Define aging time for flow-records in seconds
 ---------------------------------------------
 
