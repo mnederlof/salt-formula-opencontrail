@@ -8,6 +8,7 @@ parameters:
     opencontrail_identity_version: '2.0'
     opencontrail_admin_password: 'none'
     opencontrail_admin_user: 'contrail'
+    opencontrail_api_ssl_enabled: False
   opencontrail:
     client:
       enabled: True
@@ -25,3 +26,7 @@ parameters:
         engine: contrail
         host: ${_param:cluster_local_address}
         port: 8082
+        use_ssl: ${_param:opencontrail_api_ssl_enabled}
+        certfile: ${_param:opencontrail_api_certfile}
+        keyfile: ${_param:opencontrail_api_keyfile}
+        cafile: ${_param:opencontrail_api_cafile}

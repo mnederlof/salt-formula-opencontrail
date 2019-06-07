@@ -15,6 +15,7 @@ opencontrail:
   client:
     api:
       host: 127.0.0.1
+      use_ssl: False
     identity:
       host: 127.0.0.1
       user: contrail

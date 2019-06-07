@@ -16,6 +16,7 @@ opencontrail:
     version: 4.0
     api:
       host: 127.0.0.1
+      use_ssl: False
     enabled: true
     network:
       engine: neutron
@@ -158,3 +159,5 @@ opencontrail:
       password: password
       token: token
       tenant: admin
+    api:
+      use_ssl: False

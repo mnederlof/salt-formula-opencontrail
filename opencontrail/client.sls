@@ -48,6 +48,7 @@ opencontrail_client_virtual_router_{{ virtual_router_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -79,6 +80,7 @@ opencontrail_client_config_node_{{ config_node_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -99,6 +101,7 @@ opencontrail_client_bgp_router_{{ bgp_router_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -115,6 +118,7 @@ opencontrail_client_analytics_node_{{ analytics_node_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -131,6 +135,7 @@ opencontrail_client_database_node_{{ database_node_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -150,6 +155,7 @@ opencontrail_client_linklocal_service_{{ linklocal_service_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -173,6 +179,7 @@ opencontrail_client_physical_router_{{ physical_router_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -202,6 +209,7 @@ opencontrail_client_virtual_machine_interface_{{ virtual_machine_interface_name 
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'
@@ -224,6 +232,7 @@ opencontrail_client_logical_interface_{{ logical_interface_name }}:
   - password: {{ client.identity.password }}
   - project: {{ client.identity.tenant }}
   - auth_host_ip: {{ client.identity.host }}
+  - api_server_use_ssl: {{ client.api.use_ssl }}
   - api_server_ip: {{ client.api.host }}
   - api_server_port: {{ client.api.port }}
   - api_base_url: '/'

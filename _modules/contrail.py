@@ -70,7 +70,7 @@ def _auth(**kwargs):
     api_host = kwargs.get('api_server_ip')
     api_port = kwargs.get('api_server_port')
     api_base_url = kwargs.get('api_base_url')
-    use_ssl = False
+    use_ssl = kwargs.get('api_server_use_ssl')
     auth_host = kwargs.get('auth_host_ip')
     vnc_lib = vnc_api.VncApi(user, password, tenant_name,
                              api_host, api_port, api_base_url, wait_for_connect=False,
@@ -183,7 +183,7 @@ def virtual_router_create(name, ip_address, router_type=None, dpdk_enabled=False
     if router_type not in router_types:
         router_type = None
     if name in vrouter_objs:
-        vrouter = virtual_router_get(name)
+        vrouter = virtual_router_get(name, **kwargs)
         vrouter_obj = vnc_client._object_read('virtual-router', id=vrouter[name]['uuid'])
         changes = {}
         if vrouter_obj.get_virtual_router_ip_address() != ip_address:

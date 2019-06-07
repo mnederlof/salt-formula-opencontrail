@@ -9,6 +9,7 @@ parameters:
     openstack_control_address: 127.0.0.1
     opencontrail_admin_password: 'none'
     opencontrail_admin_user: 'contrail'
+    opencontrail_api_ssl_enabled: False
   opencontrail:
     client:
       enabled: True
@@ -26,3 +27,7 @@ parameters:
         engine: contrail
         host: ${_param:opencontrail_control_address}
         port: 8082
+        use_ssl: ${_param:opencontrail_api_ssl_enabled}
+        certfile: ${_param:opencontrail_api_certfile}
+        keyfile: ${_param:opencontrail_api_keyfile}
+        cafile: ${_param:opencontrail_api_cafile}

@@ -180,7 +180,11 @@ config.storageManager.ca = '';
 config.cnfg = {};
 config.cnfg.server_ip = '{{ web.master.host }}';
 config.cnfg.server_port = '8082';
+{%- if web.api.use_ssl == True %}
+config.cnfg.authProtocol = 'https';
+{%- else %}
 config.cnfg.authProtocol = 'http';
+{%- endif %}
 config.cnfg.strictSSL = false;
 config.cnfg.ca = '';
 config.cnfg.statusURL = "/global-system-configs";
