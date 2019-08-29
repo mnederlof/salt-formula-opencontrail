@@ -26,10 +26,6 @@ kernel.core_pattern:
   sysctl.present:
   - value: "/var/crashes/core.%e.%p.%h.%t"
 
-net.netfilter.nf_conntrack_max:
-  sysctl.present:
-    - value: 256000
-
 {% if not pillar.opencontrail.compute is defined %}
 
 net.netfilter.nf_conntrack_tcp_timeout_time_wait:
@@ -62,22 +58,6 @@ net.ipv4.tcp_fin_timeout:
 net.unix.max_dgram_qlen:
   sysctl.present:
     - value: 1000
-
-net.ipv4.tcp_keepalive_time:
-  sysctl.present:
-    - value: 5
-
-net.ipv4.tcp_keepalive_probes:
-  sysctl.present:
-    - value: 5
-
-net.ipv4.tcp_keepalive_intvl:
-  sysctl.present:
-    - value: 1
-
-fs.file-max:
-  sysctl.present:
-  - value: 124165
 
 security_limits_conf:
   cmd.run:
