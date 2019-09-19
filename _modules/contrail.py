@@ -1064,12 +1064,13 @@ def bgp_router_create(name, type, ip_address, asn=64512, key_type=None, key=None
         vendor = 'contrail'
     elif type == 'router':
         vendor = 'mx'
-        if key_type == 'md5':
-            key_id = 0
-            key_items = AuthenticationKeyItem(key_id, key)
-            bgp_auth_data = AuthenticationData(key_type, [key_items])
     else:
         vendor = 'unknown'
+
+    if key_type == 'md5':
+        key_id = 0
+        key_items = AuthenticationKeyItem(key_id, key)
+        bgp_auth_data = AuthenticationData(key_type, [key_items])
 
     router_params = BgpRouterParams(router_type=type,
                                     vendor=vendor, autonomous_system=int(asn),
@@ -1097,9 +1098,9 @@ def bgp_router_create(name, type, ip_address, asn=64512, key_type=None, key=None
         if key_type == 'md5':
             try:
                 if bgp_router_obj.bgp_router_parameters.auth_data.key_items[0].key != key:
-                    ret['changes'].update({"key_type": {'old': bgp_router_obj.bgp_router_parameters.auth_data.key_items[0].key, 'new': key}})
+                    ret['changes'].update({"key": {'old': bgp_router_obj.bgp_router_parameters.auth_data.key_items[0].key, 'new': key}})
             except:
-                ret['changes'].update({"key_type": {'old': None, 'new': key}})
+                ret['changes'].update({"key": {'old': None, 'new': key}})
 
         if len(ret['changes']) == 0:
             return ret
