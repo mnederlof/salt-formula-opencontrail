@@ -61,12 +61,12 @@ agent:
         zookeeper-server:
           pattern: 'java.*zookeeper.server'
         cassandra-server:
-          pattern: 'java.*service.CassandraDaemon'
+          pattern: 'java.*/usr/share/cassandra'
         {%- if version < 4.0 %}
         contrail-nodemgr-database:
           pattern: 'python.*contrail-nodemgr.*-database'
         kafka-server:
-          pattern: 'java.*kafka.Kafka'
+          pattern: 'java.*kafka'
         contrail-supervisord-database:
           pattern: 'python.*supervisord.*_database'
         {%- else %}
@@ -74,7 +74,7 @@ agent:
         contrail-nodemgr-database:
           pattern: 'python.*contrail-nodemgr.*-database'
         kafka-server:
-          pattern: 'java.*kafka.Kafka'
+          pattern: 'java.*kafka'
         {%- endif %}
         {%- endif %}
     {%- endif %}
