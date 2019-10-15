@@ -17,7 +17,7 @@ provisioner:
   dependencies:
     - name: linux
       repo: git
-      source: https://github.com/salt-formulas/salt-formula-linux
+      source: https://gerrit.mcp.mirantis.com/salt-formulas/linux
       branch: <%=ENV['GERRIT_BRANCH'] || 'master' %>
   state_top:
     base:
@@ -49,24 +49,12 @@ verifier:
   sudo: true
 
 docker_images:
-  - &trusty-20177 <%=ENV['IMAGE_TRUSTY_20177'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-trusty-salt-2017.7/salt:2018_11_19'%>
-  - &xenial-20177 <%=ENV['IMAGE_XENIAL_20177'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-2017.7/salt:2018_11_19'%>
-  - &xenial-stable <%=ENV['IMAGE_XENIAL_STABLE'] || 'docker-dev-local.docker.mirantis.net/epcim/salt/saltstack-ubuntu-xenial-salt-stable/salt:2018_11_19'%>
+  - &xenial-20177 <%=ENV['IMAGE_XENIAL_20177'] || 'docker-dev-local.docker.mirantis.net/mirantis/drivetrain/salt-formulas-ci/salt-formulas-ci-xenial-2017.7:latest'%>
 
 platforms:
-  - name: trusty-2017.7
-    driver_config:
-      image: *trusty-20177
-      platform: ubuntu
-
   - name: xenial-2017.7
     driver_config:
       image: *xenial-20177
-      platform: ubuntu
-
-  - name: xenial-stable
-    driver_config:
-      image: *xenial-stable
       platform: ubuntu
 
 suites:
@@ -83,8 +71,6 @@ suites:
       pillars-from-files:
         opencontrail.sls: tests/pillar/single40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
-    excludes:
-      - trusty-2017.7
 
   - name: analytics3
     provisioner:
@@ -99,8 +85,6 @@ suites:
       pillars-from-files:
         opencontrail.sls: tests/pillar/analytics40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
-    excludes:
-      - trusty-2017.7
 
   - name: control3
     provisioner:
@@ -115,8 +99,6 @@ suites:
       pillars-from-files:
         opencontrail.sls: tests/pillar/control40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
-    excludes:
-      - trusty-2017.7
 
   - name: cluster3
     provisioner:
@@ -131,8 +113,6 @@ suites:
       pillars-from-files:
         opencontrail.sls: tests/pillar/cluster40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
-    excludes:
-      - trusty-2017.7
 
   # - name: tor3
   #   provisioner:
@@ -151,8 +131,6 @@ suites:
       pillars-from-files:
         opencontrail.sls: tests/pillar/vrouter3.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc323.sls
-    excludes:
-      - trusty-2017.7
 
   - name: vrouter40
     provisioner:
@@ -161,7 +139,5 @@ suites:
       pillars-from-files:
         opencontrail.sls: tests/pillar/vrouter40.sls
         linux_repo_opencontrail.sls: tests/pillar/repo_opencontrail_oc41.sls
-    excludes:
-      - trusty-2017.7
 
 # vim: ft=yaml sw=2 ts=2 sts=2 tw=125
