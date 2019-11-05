@@ -897,6 +897,17 @@ automatically. The period of sync is 60s.
           sync_on_demand: false
       ...
 
+Configure duration between polls to keystone to sync domains and projects
+-------------------------------------------------------------------------
+
+.. code-block:: yaml
+
+    opencontrail:
+      ...
+      config:
+        keystone_resync_interval_secs: 60
+      ...
+
 Cassandra listen configuration
 ------------------------------
 
